@@ -4,7 +4,7 @@ def githubProperties = new Properties()
 githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
 
 def versionName = { ->
-    return "2.1.2"
+    return "2.1.3"
 }
 
 def artificatId = { ->
