@@ -1,10 +1,10 @@
 apply plugin: 'maven-publish'
 
 def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(rootProject.file("local.properties")))
+githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
 
 def versionName = { ->
-    return "2.1.1"
+    return "2.1.2"
 }
 
 def artificatId = { ->
