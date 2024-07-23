@@ -4,7 +4,11 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.ImageFormat
-import android.hardware.camera2.*
+import android.hardware.camera2.CameraAccessException
+import android.hardware.camera2.CameraCaptureSession
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraDevice
+import android.hardware.camera2.CameraManager
 import android.media.ImageReader
 import android.os.Build
 import android.util.Log
@@ -89,20 +93,21 @@ class Camera2Loader(private val activity: Activity) : CameraLoader() {
 
     private fun getCameraId(facing: Int): String? {
         return cameraManager.cameraIdList.find { id ->
-            cameraManager.getCameraCharacteristics(id).get(CameraCharacteristics.LENS_FACING) == facing
+            cameraManager.getCameraCharacteristics(id)
+                .get(CameraCharacteristics.LENS_FACING) == facing
         }
     }
 
     private fun startCaptureSession() {
         val size = chooseOptimalSize()
         imageReader =
-                ImageReader.newInstance(size.width, size.height, ImageFormat.YUV_420_888, 2).apply {
-                    setOnImageAvailableListener({ reader ->
-                        val image = reader?.acquireNextImage() ?: return@setOnImageAvailableListener
-                        onPreviewFrame?.invoke(image.generateNV21Data(), image.width, image.height)
-                        image.close()
-                    }, null)
-                }
+            ImageReader.newInstance(size.width, size.height, ImageFormat.YUV_420_888, 2).apply {
+                setOnImageAvailableListener({ reader ->
+                    val image = reader?.acquireNextImage() ?: return@setOnImageAvailableListener
+                    onPreviewFrame?.invoke(image.generateNV21Data(), image.width, image.height)
+                    image.close()
+                }, null)
+            }
 
         try {
             cameraInstance?.createCaptureSession(
@@ -130,7 +135,7 @@ class Camera2Loader(private val activity: Activity) : CameraLoader() {
 
         return outputSizes?.filter {
             it.width < maxPreviewWidth / 2 && it.height < maxPreviewHeight / 2
-        }?.maxBy {
+        }?.maxByOrNull {
             it.width * it.height
         } ?: Size(PREVIEW_WIDTH, PREVIEW_HEIGHT)
     }
