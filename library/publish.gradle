@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
 
-def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 def versionName = { ->
     return "2.1.4"
@@ -53,8 +53,8 @@ publishing {
             url = uri("https://maven.pkg.github.com/OnelightApps/android-gpuimage")
 
             credentials {
-                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
-                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+                username = localProperties['github.username'] ?: System.getenv("GPR_USER")
+                password = localProperties['github.token'] ?: System.getenv("GPR_API_KEY")
             }
         }
     }

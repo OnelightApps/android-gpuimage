@@ -56,8 +56,8 @@ public class GPUImage {
 
     public enum ScaleType {CENTER_INSIDE, CENTER_CROP}
 
-    static final int SURFACE_TYPE_SURFACE_VIEW = 0;
-    static final int SURFACE_TYPE_TEXTURE_VIEW = 1;
+    public static final int SURFACE_TYPE_SURFACE_VIEW = 0;
+    public static final int SURFACE_TYPE_TEXTURE_VIEW = 1;
 
     private final Context context;
     private final GPUImageRenderer renderer;

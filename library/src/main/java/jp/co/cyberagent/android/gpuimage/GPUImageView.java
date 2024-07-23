@@ -16,6 +16,9 @@
 
 package jp.co.cyberagent.android.gpuimage;
 
+import static jp.co.cyberagent.android.gpuimage.GPUImage.SURFACE_TYPE_SURFACE_VIEW;
+import static jp.co.cyberagent.android.gpuimage.GPUImage.SURFACE_TYPE_TEXTURE_VIEW;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -43,10 +46,6 @@ import java.util.concurrent.Semaphore;
 
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
 import jp.co.cyberagent.android.gpuimage.util.Rotation;
-import sun.java2d.loops.SurfaceType;
-
-import static jp.co.cyberagent.android.gpuimage.GPUImage.SURFACE_TYPE_SURFACE_VIEW;
-import static jp.co.cyberagent.android.gpuimage.GPUImage.SURFACE_TYPE_TEXTURE_VIEW;
 
 public class GPUImageView extends FrameLayout {
 
@@ -71,9 +70,14 @@ public class GPUImageView extends FrameLayout {
         init(context, attrs);
     }
 
-    public GPUImageView(Context context, SurfaceType surfaceType) {
+    public GPUImageView(Context context, Integer surfaceType) {
         super(context);
-        init(context, surfaceType);
+        init(context, null, surfaceType);
+    }
+
+    public GPUImageView(Context context, AttributeSet attrs, Integer surfaceType) {
+        super(context);
+        init(context, attrs, surfaceType);
     }
 
     private void init(Context context, AttributeSet attrs) {
@@ -100,7 +104,16 @@ public class GPUImageView extends FrameLayout {
         addView(surfaceView);
     }
 
-    private void init(Context context, surfaceType: Int) {
+    private void init(Context context, AttributeSet attrs, Integer surfaceType) {
+        if (attrs != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.GPUImageView, 0, 0);
+            try {
+                isShowLoading = a.getBoolean(R.styleable.GPUImageView_gpuimage_show_loading, isShowLoading);
+            } finally {
+                a.recycle();
+            }
+        }
+
         gpuImage = new GPUImage(context);
 
         if (surfaceType == SURFACE_TYPE_TEXTURE_VIEW) {
