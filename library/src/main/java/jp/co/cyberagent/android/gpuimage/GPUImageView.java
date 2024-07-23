@@ -43,6 +43,7 @@ import java.util.concurrent.Semaphore;
 
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
 import jp.co.cyberagent.android.gpuimage.util.Rotation;
+import sun.java2d.loops.SurfaceType;
 
 import static jp.co.cyberagent.android.gpuimage.GPUImage.SURFACE_TYPE_SURFACE_VIEW;
 import static jp.co.cyberagent.android.gpuimage.GPUImage.SURFACE_TYPE_TEXTURE_VIEW;
@@ -70,6 +71,11 @@ public class GPUImageView extends FrameLayout {
         init(context, attrs);
     }
 
+    public GPUImageView(Context context, SurfaceType surfaceType) {
+        super(context);
+        init(context, surfaceType);
+    }
+
     private void init(Context context, AttributeSet attrs) {
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.GPUImageView, 0, 0);
@@ -80,7 +86,9 @@ public class GPUImageView extends FrameLayout {
                 a.recycle();
             }
         }
+
         gpuImage = new GPUImage(context);
+
         if (surfaceType == SURFACE_TYPE_TEXTURE_VIEW) {
             surfaceView = new GPUImageGLTextureView(context, attrs);
             gpuImage.setGLTextureView((GLTextureView) surfaceView);
@@ -88,6 +96,21 @@ public class GPUImageView extends FrameLayout {
             surfaceView = new GPUImageGLSurfaceView(context, attrs);
             gpuImage.setGLSurfaceView((GLSurfaceView) surfaceView);
         }
+
+        addView(surfaceView);
+    }
+
+    private void init(Context context, surfaceType: Int) {
+        gpuImage = new GPUImage(context);
+
+        if (surfaceType == SURFACE_TYPE_TEXTURE_VIEW) {
+            surfaceView = new GPUImageGLTextureView(context, attrs);
+            gpuImage.setGLTextureView((GLTextureView) surfaceView);
+        } else {
+            surfaceView = new GPUImageGLSurfaceView(context, attrs);
+            gpuImage.setGLSurfaceView((GLSurfaceView) surfaceView);
+        }
+
         addView(surfaceView);
     }
 
