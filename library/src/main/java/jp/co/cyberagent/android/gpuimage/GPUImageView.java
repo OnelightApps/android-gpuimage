@@ -34,6 +34,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
@@ -453,6 +454,12 @@ public class GPUImageView extends FrameLayout {
         waiter.acquire();
 
         return resultBitmap;
+    }
+
+    public void addSurfaceTextureListener(TextureView.SurfaceTextureListener listener) {
+        if (surfaceType == SURFACE_TYPE_TEXTURE_VIEW && surfaceView instanceof GLTextureView) {
+            ((GLTextureView) surfaceView).addSurfaceTextureListener(listener);
+        }
     }
 
     /**
