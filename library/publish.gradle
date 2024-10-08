@@ -4,7 +4,7 @@ def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 def versionName = { ->
-    return "2.1.5"
+    return "2.1.6"
 }
 
 def artificatId = { ->
