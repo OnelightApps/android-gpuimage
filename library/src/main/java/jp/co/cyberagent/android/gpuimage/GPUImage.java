@@ -46,6 +46,7 @@ import java.net.URL;
 import java.util.List;
 
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
+import jp.co.cyberagent.android.gpuimage.listeners.GPUImageRendererListener;
 import jp.co.cyberagent.android.gpuimage.util.Rotation;
 
 /**
@@ -259,7 +260,7 @@ public class GPUImage {
      * @return array with width and height of bitmap image
      */
     public int[] getScaleSize() {
-        return new int[] {scaleWidth, scaleHeight};
+        return new int[]{scaleWidth, scaleHeight};
     }
 
     /**
@@ -305,6 +306,10 @@ public class GPUImage {
      */
     public void setImage(final File file) {
         new LoadImageFileTask(this, file).execute();
+    }
+
+    public void setRendererListener(GPUImageRendererListener listener) {
+        renderer.setListener(listener);
     }
 
     private String getPath(final Uri uri) {

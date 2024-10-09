@@ -46,6 +46,7 @@ import java.io.FileOutputStream;
 import java.util.concurrent.Semaphore;
 
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
+import jp.co.cyberagent.android.gpuimage.listeners.GPUImageRendererListener;
 import jp.co.cyberagent.android.gpuimage.util.Rotation;
 
 public class GPUImageView extends FrameLayout {
@@ -460,6 +461,10 @@ public class GPUImageView extends FrameLayout {
         if (surfaceType == SURFACE_TYPE_TEXTURE_VIEW && surfaceView instanceof GLTextureView) {
             ((GLTextureView) surfaceView).addSurfaceTextureListener(listener);
         }
+    }
+
+    public void setRendererListener(GPUImageRendererListener listener) {
+        gpuImage.setRendererListener(listener);
     }
 
     /**

@@ -16,6 +16,8 @@
 
 package jp.co.cyberagent.android.gpuimage;
 
+import static jp.co.cyberagent.android.gpuimage.util.TextureRotationUtil.TEXTURE_NO_ROTATION;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.SurfaceTexture;
@@ -37,11 +39,10 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
+import jp.co.cyberagent.android.gpuimage.listeners.GPUImageRendererListener;
 import jp.co.cyberagent.android.gpuimage.util.OpenGlUtils;
 import jp.co.cyberagent.android.gpuimage.util.Rotation;
 import jp.co.cyberagent.android.gpuimage.util.TextureRotationUtil;
-
-import static jp.co.cyberagent.android.gpuimage.util.TextureRotationUtil.TEXTURE_NO_ROTATION;
 
 public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.Renderer, PreviewCallback {
     private static final int NO_IMAGE = -1;
@@ -78,6 +79,8 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
     private float backgroundRed = 0;
     private float backgroundGreen = 0;
     private float backgroundBlue = 0;
+
+    private GPUImageRendererListener listener;
 
     public GPUImageRenderer(final GPUImageFilter filter) {
         this.filter = filter;
@@ -121,8 +124,13 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
         runAll(runOnDraw);
         filter.onDraw(glTextureId, glCubeBuffer, glTextureBuffer);
         runAll(runOnDrawEnd);
+
         if (surfaceTexture != null) {
             surfaceTexture.updateTexImage();
+        }
+
+        if (listener != null) {
+            listener.onDrawFrame();
         }
     }
 
@@ -262,6 +270,10 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
 
     public void setScaleType(GPUImage.ScaleType scaleType) {
         this.scaleType = scaleType;
+    }
+
+    public void setListener(GPUImageRendererListener listener) {
+        this.listener = listener;
     }
 
     protected int getFrameWidth() {
