@@ -1,12 +1,14 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
 
+    id 'kotlin-android'
     id 'maven-publish'
 }
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
+
+    namespace 'jp.co.cyberagent.android.gpuimage'
 
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION as int
@@ -23,6 +25,11 @@ android {
         cmake { path "src/main/cpp/CMakeLists.txt" }
     }
 
+    compileOptions.with {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     buildTypes {
         debug {
             debuggable true
@@ -31,6 +38,10 @@ android {
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
     }
 }
 
