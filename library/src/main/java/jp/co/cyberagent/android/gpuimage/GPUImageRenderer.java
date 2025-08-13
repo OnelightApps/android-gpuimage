@@ -296,7 +296,6 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
         float ratio1 = outputWidth / imageWidth;
         float ratio2 = outputHeight / imageHeight;
         float ratioMax = Math.max(ratio1, ratio2);
-        float ratioMin = Math.min(ratio1, ratio2);
 
         int imageWidthNew = Math.round(imageWidth * ratioMax);
         int imageHeightNew = Math.round(imageHeight * ratioMax);
@@ -318,10 +317,10 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
             };
         } else if (scaleType == GPUImage.ScaleType.ZOOM) {
             cube = new float[]{
-                    CUBE[0] * ratioMin, CUBE[1] * ratioMin,
-                    CUBE[2] * ratioMin, CUBE[3] * ratioMin,
-                    CUBE[4] * ratioMin, CUBE[5] * ratioMin,
-                    CUBE[6] * ratioMin, CUBE[7] * ratioMin,
+                    CUBE[0] * ratioWidth, CUBE[1] * ratioHeight,
+                    CUBE[2] * ratioWidth, CUBE[3] * ratioHeight,
+                    CUBE[4] * ratioWidth, CUBE[5] * ratioHeight,
+                    CUBE[6] * ratioWidth, CUBE[7] * ratioHeight,
             };
         } else {
             cube = new float[]{
