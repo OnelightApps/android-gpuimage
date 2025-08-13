@@ -296,6 +296,8 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
         float ratio1 = outputWidth / imageWidth;
         float ratio2 = outputHeight / imageHeight;
         float ratioMax = Math.max(ratio1, ratio2);
+        float ratioMin = Math.min(ratio1, ratio2);
+
         int imageWidthNew = Math.round(imageWidth * ratioMax);
         int imageHeightNew = Math.round(imageHeight * ratioMax);
 
@@ -304,6 +306,7 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
 
         float[] cube = CUBE;
         float[] textureCords = TextureRotationUtil.getRotation(rotation, flipHorizontal, flipVertical);
+
         if (scaleType == GPUImage.ScaleType.CENTER_CROP) {
             float distHorizontal = (1 - 1 / ratioWidth) / 2;
             float distVertical = (1 - 1 / ratioHeight) / 2;
@@ -313,19 +316,12 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
                     addDistance(textureCords[4], distHorizontal), addDistance(textureCords[5], distVertical),
                     addDistance(textureCords[6], distHorizontal), addDistance(textureCords[7], distVertical),
             };
-        } else if (scaleType == GPUImage.ScaleType.FIT_CENTER) {
-            float ratioMin = Math.min(ratio1, ratio2);
-            float imageWidthScaled = imageWidth * ratioMin;
-            float imageHeightScaled = imageHeight * ratioMin;
-            
-            float scaleX = imageWidthScaled / outputWidth;
-            float scaleY = imageHeightScaled / outputHeight;
-            
+        } else if (scaleType == GPUImage.ScaleType.ZOOM) {
             cube = new float[]{
-                    CUBE[0] * scaleX, CUBE[1] * scaleY,
-                    CUBE[2] * scaleX, CUBE[3] * scaleY,
-                    CUBE[4] * scaleX, CUBE[5] * scaleY,
-                    CUBE[6] * scaleX, CUBE[7] * scaleY,
+                    CUBE[0] * ratioMin, CUBE[1] * ratioMin,
+                    CUBE[2] * ratioMin, CUBE[3] * ratioMin,
+                    CUBE[4] * ratioMin, CUBE[5] * ratioMin,
+                    CUBE[6] * ratioMin, CUBE[7] * ratioMin,
             };
         } else {
             cube = new float[]{
