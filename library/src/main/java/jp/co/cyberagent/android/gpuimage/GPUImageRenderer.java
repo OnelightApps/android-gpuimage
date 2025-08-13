@@ -33,6 +33,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Queue;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -150,7 +151,7 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
     private void runAll(Queue<Runnable> queue) {
         synchronized (queue) {
             while (!queue.isEmpty()) {
-                queue.poll().run();
+                Objects.requireNonNull(queue.poll()).run();
             }
         }
     }
@@ -311,6 +312,20 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
                     addDistance(textureCords[2], distHorizontal), addDistance(textureCords[3], distVertical),
                     addDistance(textureCords[4], distHorizontal), addDistance(textureCords[5], distVertical),
                     addDistance(textureCords[6], distHorizontal), addDistance(textureCords[7], distVertical),
+            };
+        } else if (scaleType == GPUImage.ScaleType.FIT_CENTER) {
+            float ratioMin = Math.min(ratio1, ratio2);
+            float imageWidthScaled = imageWidth * ratioMin;
+            float imageHeightScaled = imageHeight * ratioMin;
+            
+            float scaleX = imageWidthScaled / outputWidth;
+            float scaleY = imageHeightScaled / outputHeight;
+            
+            cube = new float[]{
+                    CUBE[0] * scaleX, CUBE[1] * scaleY,
+                    CUBE[2] * scaleX, CUBE[3] * scaleY,
+                    CUBE[4] * scaleX, CUBE[5] * scaleY,
+                    CUBE[6] * scaleX, CUBE[7] * scaleY,
             };
         } else {
             cube = new float[]{
