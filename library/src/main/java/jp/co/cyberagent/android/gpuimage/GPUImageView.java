@@ -77,17 +77,6 @@ public class GPUImageView extends FrameLayout {
         init(context, null, surfaceType);
     }
 
-    public GPUImageView(Context context, Integer surfaceType, Boolean clipContent) {
-        super(context);
-
-        if (!clipContent) {
-            setClipChildren(false);
-            setClipToPadding(false);
-        }
-
-        init(context, null, surfaceType);
-    }
-
     public GPUImageView(Context context, AttributeSet attrs, Integer surfaceType) {
         super(context);
         init(context, attrs, surfaceType);
