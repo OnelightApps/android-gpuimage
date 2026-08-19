@@ -33,6 +33,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Queue;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -150,7 +151,7 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
     private void runAll(Queue<Runnable> queue) {
         synchronized (queue) {
             while (!queue.isEmpty()) {
-                queue.poll().run();
+                Objects.requireNonNull(queue.poll()).run();
             }
         }
     }
@@ -295,6 +296,7 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
         float ratio1 = outputWidth / imageWidth;
         float ratio2 = outputHeight / imageHeight;
         float ratioMax = Math.max(ratio1, ratio2);
+
         int imageWidthNew = Math.round(imageWidth * ratioMax);
         int imageHeightNew = Math.round(imageHeight * ratioMax);
 
@@ -303,6 +305,7 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
 
         float[] cube = CUBE;
         float[] textureCords = TextureRotationUtil.getRotation(rotation, flipHorizontal, flipVertical);
+
         if (scaleType == GPUImage.ScaleType.CENTER_CROP) {
             float distHorizontal = (1 - 1 / ratioWidth) / 2;
             float distVertical = (1 - 1 / ratioHeight) / 2;
@@ -311,6 +314,13 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
                     addDistance(textureCords[2], distHorizontal), addDistance(textureCords[3], distVertical),
                     addDistance(textureCords[4], distHorizontal), addDistance(textureCords[5], distVertical),
                     addDistance(textureCords[6], distHorizontal), addDistance(textureCords[7], distVertical),
+            };
+        } else if (scaleType == GPUImage.ScaleType.ZOOM) {
+            cube = new float[]{
+                    CUBE[0] * ratioWidth, CUBE[1] * ratioHeight,
+                    CUBE[2] * ratioWidth, CUBE[3] * ratioHeight,
+                    CUBE[4] * ratioWidth, CUBE[5] * ratioHeight,
+                    CUBE[6] * ratioWidth, CUBE[7] * ratioHeight,
             };
         } else {
             cube = new float[]{
